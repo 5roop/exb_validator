@@ -106,7 +106,7 @@ def rule2_check_nonverbal(doc: ET.Element) -> bool:
         disfluency_type_tier = doc.find(
             f".//{'{*}'}tier[@speaker='{speaker}'][@category='nonverbalDisfluency'][@display-name='{speaker} [nonverbalDisfluency]']"
         )
-        assert disfluency_type_tier, "nonverbal tier not found"
+        assert disfluency_type_tier is not None, "nonverbal tier not found"
         disfluencytimestamps = [
             event.get("start") for event in disfluency_type_tier.find(".//{*}event")
         ] + [event.get("end") for event in disfluency_type_tier.find(".//{*}event")]
