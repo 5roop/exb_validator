@@ -1,3 +1,5 @@
+CANDIDATE_PATH = "/home/peter/mezzanine/iriss_debug_and_salvage/iriss_with_w_and_pauses"
+
 import datetime
 from pathlib import Path
 from lxml import etree as ET
@@ -44,7 +46,7 @@ def find_candidates_for_original(doc: ET.Element) -> list[str]:
     longest_start = sorted(
         [i.get("start") for i in doc.findall(".//{*}event")], key=lambda s: -1 * len(s)
     )[0]
-    candidates = Path("./iriss_with_w_and_pauses").glob("*.exb.xml")
+    candidates = Path(CANDIDATE_PATH).glob("*.exb.xml")
     hits = []
     for c in candidates:
         r = subprocess.run(["grep", f'"{longest_start}"', str(c)], capture_output=True)

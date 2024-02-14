@@ -28,7 +28,6 @@ uploaded_file = st.file_uploader("EXB file upload:")
 if uploaded_file is not None:
     EXB_bytes = uploaded_file.getvalue()
 
-    from pathlib import Path
     from lxml import etree as ET
     import pandas as pd
     import numpy as np
@@ -37,7 +36,6 @@ if uploaded_file is not None:
 
     file_passes = True
 
-    st.divider()
     doc = ET.fromstring(EXB_bytes)
     from validation import find_candidates_for_original
 
