@@ -54,7 +54,9 @@ def find_candidates_for_original(doc: ET.Element) -> list[str]:
 
 
 def find_all_speakers(doc: ET.Element) -> set[str]:
-    return {i.get("id") for i in doc.findall(".//{*}speaker")}
+    all_speakers = {i.get("id") for i in doc.findall(".//{*}speaker")}
+    speakers_with_at_least_one_turn = [i for i in all_speakers if doc.find(f".//{'{*}'}tier[@speaker='{i}']") is not None]
+    return speakers_with_at_least_one_turn
 
 
 def get_timeline(doc: ET.Element) -> ET.Element:
@@ -170,7 +172,7 @@ def rule4_check_disfluencyStructure(doc: ET.Element) -> bool:
         for tli in disfluency_structure_timestamps:
             if not tli in tier1timestamps:
                 raise ValueError(
-                    f"Disfluency Structure tier contains timestamp {tli.get('id')} that are not in the first tier! (Rule 4 violation)\n\n"
+                    f"Disfluency Structure tier for speaker {speaker} contains timestamp {tli} that are not in the first tier! (Rule 4 violation)\n\n"
                 )
     return True
 
