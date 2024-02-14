@@ -122,6 +122,8 @@ def rule3_check_verbal(doc: ET.Element) -> bool:
     speakers = find_all_speakers(doc)
     for speaker in speakers:
         tier1 = doc.find(f".//{'{*}'}tier[@speaker='{speaker}']")
+        if tier1 is None:
+            raise ValueError(f"No tiers found for speaker {speaker}, is that OK?")
         tier1timestamps = [
             event.get("start") for event in tier1.find(".//{*}event")
         ] + [event.get("end") for event in tier1.find(".//{*}event")]
@@ -130,7 +132,8 @@ def rule3_check_verbal(doc: ET.Element) -> bool:
         )
         # if not disfluency_type_tier:
         #     raise ValueError(f"Could not find tier for disfluencyType{i}!")
-
+        if list(disfluency_type_tier.getchildren()) == []:
+            return True
         disfluencytimestamps = [
             event.get("start") for event in disfluency_type_tier.find(".//{*}event")
         ] + [event.get("end") for event in disfluency_type_tier.find(".//{*}event")]
@@ -275,13 +278,3 @@ def rule6_check_text(doc, original):
             raise ValueError(f"Text for speaker {speaker} does not match original.")
 
 
-if __name__ == "__main__":
-    doc = ET.fromstring(
-        Path("new_files_to_validate/Iriss-P-G7001-P700192.exb(2).xml").read_bytes()
-    )
-    original = ET.fromstring(
-        Path("iriss_with_w_and_pauses/Iriss-P-G7001-P700192.exb.xml").read_bytes()
-    )
-    rule6_check_text(doc, original)
-    rule5_disStruct_n_to_one_to_verbal_allow_gaps(doc)
-    pass
